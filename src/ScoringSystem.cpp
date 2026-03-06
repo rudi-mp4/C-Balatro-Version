@@ -10,15 +10,8 @@ using namespace std;
 PokerHandResult StandardPokerStrategy::evaluateHand(const vector<Card>& cards) {
     int jumlahKartu = cards.size();
 
-    auto makeResult = [&](string nama, int base, int multiplier, vector<int> indices) -> PokerHandResult {
-        int skorKombinasi = base * multiplier;
-        int total = skorKombinasi;
-
-        for (int idx : indices) {
-            total += cards[idx].getSkor();
-        }
-
-        return {nama, skorKombinasi, total, indices};
+    auto makeResult = [&](string nama, int baseChips, int baseMult, vector<int> indices) -> PokerHandResult {
+        return {nama, baseChips, baseMult, indices};
     };
 
     if (jumlahKartu < 1 || jumlahKartu > 5) {

@@ -5,12 +5,12 @@
 
 class FlatBonus125Modifier : public IModifier {
 public:
-    int apply(int currentScore) override {
-        return currentScore + 125;
+    void apply(int& chips, int& mult) override {
+        chips += 125;
     }
 
     std::string getName() const override {
-        return "Flat Bonus Modifier (+125 Score)";
+        return "Chipper Supreme (+125 chips)";
     }
 };
 

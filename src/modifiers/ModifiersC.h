@@ -5,12 +5,12 @@
 
 class TripleMultiplierModifier : public IModifier {
 public:
-    int apply(int currentScore) override {
-        return currentScore * 3;
+    void apply(int& chips, int& mult) override {
+        mult *= 3;
     }
 
     std::string getName() const override {
-        return "Triple Multiplier Modifier (x3 Score)";
+        return "Triple Threat (x3 mult)";
     }
 };
 

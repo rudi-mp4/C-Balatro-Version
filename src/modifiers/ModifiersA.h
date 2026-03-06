@@ -5,12 +5,12 @@
 
 class DoubleMultiplierModifier : public IModifier {
 public:
-    int apply(int currentScore) override {
-        return currentScore * 2;
+    void apply(int& chips, int& mult) override {
+        mult *= 2;
     }
 
     std::string getName() const override {
-        return "Double Multiplier Modifier (x2 Score)";
+        return "Double Trouble";
     }
 };
 

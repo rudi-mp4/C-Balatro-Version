@@ -5,12 +5,12 @@
 
 class PentaMultiplierModifier : public IModifier {
 public:
-    int apply(int currentScore) override {
-        return currentScore * 5;
+    void apply(int& chips, int& mult) override {
+        mult *= 5;
     }
 
     std::string getName() const override {
-        return "Penta Multiplier Modifier (x5 Score)";
+        return "Penta Power (x5 mult)";
     }
 };
 

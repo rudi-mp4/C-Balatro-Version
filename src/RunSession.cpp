@@ -182,24 +182,44 @@ void RunSession::runGameLoop() {
 
                     PokerHandResult hasil = scorer.calculateScore(chosenCards);
 
-                    int skorKartu = hasil.skorTotal - hasil.skorKombinasi;
+                    int chips = hasil.baseChips;
+                    int mult = hasil.baseMult;
 
-                    int skorFinal = hasil.skorTotal;
+                    cout << "\nHand: " << hasil.namaKombinasi << "\n";
+                    cout << "Base Chips: " << hasil.baseChips << " | Base Mult: " << hasil.baseMult << "\n";
 
-                    for(auto mod : inventory)
-                        skorFinal = mod->apply(skorFinal);
+                    cout << "Scoring Cards:\n";
+                    int cardChips = 0;
+                    for (int idx : hasil.indeksKartuTerpakai) {
+                        cout << "  - " << chosenCards[idx].getNomor() << " of " << chosenCards[idx].getBentuk() << "\n";
+                        cardChips += chosenCards[idx].getSkor();
+                    }
+                    cout << "Card Chips Added: " << cardChips << "\n";
+                    chips += cardChips;
+                    cout << "Total Chips: " << chips << " | Mult: " << mult << "\n";
 
-                    cout << "\n=== HASIL ===\n";
+                    if (!inventory.empty()) {
+                        cout << "\n-- Applying Modifiers --\n";
+                        for (auto mod : inventory) {
+                            int prevChips = chips;
+                            int prevMult = mult;
+                            mod->apply(chips, mult);
+                            if (chips != prevChips) {
+                                cout << "[" << mod->getName() << "] +" << (chips - prevChips) << " chips\n";
+                            }
+                            if (mult != prevMult) {
+                                if (prevMult != 0 && mult % prevMult == 0 && mult / prevMult > 1) {
+                                    // multiplicative change - no extra description line
+                                } else {
+                                    cout << "[" << mod->getName() << "] +" << (mult - prevMult) << " mult\n";
+                                }
+                            }
+                            cout << "[" << mod->getName() << "] -> Chips: " << chips << " | Mult: " << mult << "\n";
+                        }
+                    }
 
-                    cout << "Kombinasi: "
-                         << hasil.namaKombinasi
-                         << " (" << hasil.skorKombinasi << ")\n";
-
-                    cout << "Total skor kartu: "
-                         << skorKartu << "\n";
-
-                    cout << "Total Skor Turn: "
-                         << skorFinal << "\n";
+                    int skorFinal = chips * mult;
+                    cout << "\nFinal Score: " << skorFinal << "\n";
 
                     skorTerkumpul += skorFinal;
 
@@ -221,6 +241,11 @@ void RunSession::runGameLoop() {
                     if(confirm=="y" || confirm=="Y"){
                         cout<<"Kartu dibuang.\n";
                         kesempatanDiscard--;
+                        for(size_t i=0;i<hand.size();i++){
+                            if(find(indeksTerpilih.begin(),indeksTerpilih.end(),(int)i)==indeksTerpilih.end()){
+                                deck.push_back(hand[i]);
+                            }
+                        }
                     }
                     else{
                         cout<<"Discard dibatalkan.\n";

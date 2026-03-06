@@ -9,8 +9,8 @@
 // Struktur untuk menyimpan hasil dari evaluasi kartu
 struct PokerHandResult {
     std::string namaKombinasi;
-    int skorKombinasi;
-    int skorTotal;
+    int baseChips;
+    int baseMult;
     std::vector<int> indeksKartuTerpakai;
 };
 

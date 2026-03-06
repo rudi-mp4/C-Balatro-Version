@@ -5,12 +5,12 @@
 
 class QuadMultiplierModifier : public IModifier {
 public:
-    int apply(int currentScore) override {
-        return currentScore * 4;
+    void apply(int& chips, int& mult) override {
+        mult *= 4;
     }
 
     std::string getName() const override {
-        return "Quad Multiplier Modifier (x4 Score)";
+        return "Quad Force (x4 mult)";
     }
 };
 

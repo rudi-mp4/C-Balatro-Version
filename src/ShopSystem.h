@@ -156,7 +156,7 @@ public:
                     currency+=10;
                 else if(name.find("x3")!=std::string::npos || name.find("+100")!=std::string::npos)
                     currency+=5;
-                else if(name.find("Double")!=std::string::npos)
+                else if(name.find("Double")!=std::string::npos || name.find("x2")!=std::string::npos)
                     currency+=3;
                 else
                     currency+=2;
