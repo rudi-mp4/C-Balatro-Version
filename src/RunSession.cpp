@@ -130,6 +130,9 @@ void RunSession::runGameLoop() {
                     deck.pop_back();
                 }
 
+                bool actionDone = false;
+                while (!actionDone) {
+
                 cout << "\nKartu di tangan:\n";
 
                 for(size_t i=0;i<hand.size();i++){
@@ -149,7 +152,7 @@ void RunSession::runGameLoop() {
                 int pilihan;
 
                 while(ss>>pilihan){
-                    if(pilihan>=1 && pilihan<=hand.size()){
+                    if(pilihan>=1 && pilihan<=(int)hand.size()){
                         if(find(indeksTerpilih.begin(),indeksTerpilih.end(),pilihan-1)==indeksTerpilih.end()){
                             indeksTerpilih.push_back(pilihan-1);
                         }
@@ -158,7 +161,6 @@ void RunSession::runGameLoop() {
 
                 if(indeksTerpilih.empty()){
                     cout<<"Tidak ada kartu valid.\n";
-                    for(auto &c:hand) deck.push_back(c);
                     continue;
                 }
 
@@ -172,7 +174,8 @@ void RunSession::runGameLoop() {
 
                 cout << "\n1. Play Hand\n";
                 cout << "2. Discard\n";
-                cout << "3. Exit To Menu\n";
+                cout << "3. Short\n";
+                cout << "4. Exit To Menu\n";
                 cout << "Pilih: ";
 
                 string action;
@@ -224,6 +227,7 @@ void RunSession::runGameLoop() {
                     skorTerkumpul += skorFinal;
 
                     kesempatanMain--;
+                    actionDone = true;
                 }
 
                 else if(action=="2"){
@@ -246,19 +250,52 @@ void RunSession::runGameLoop() {
                                 deck.push_back(hand[i]);
                             }
                         }
-                    }
-                    else{
-                        cout<<"Discard dibatalkan.\n";
-                        for(auto &c:hand)
-                            deck.push_back(c);
-                        continue;
+                        actionDone = true;
                     }
                 }
 
                 else if(action=="3"){
-                    exitToMenu = true;
-                    break;
+
+                    cout << "\n1. By Skor\n";
+                    cout << "2. By Suit\n";
+                    cout << "3. Back\n";
+                    cout << "Pilih: ";
+
+                    string sortChoice;
+                    getline(cin, sortChoice);
+
+                    if(sortChoice=="1"){
+                        sort(hand.begin(), hand.end(), [](const Card& a, const Card& b){
+                            return a.getSkor() < b.getSkor();
+                        });
+                        cout << "Kartu diurutkan berdasarkan skor.\n";
+                    }
+                    else if(sortChoice=="2"){
+                        sort(hand.begin(), hand.end(), [](const Card& a, const Card& b){
+                            auto suitOrder = [](const string& s) -> int {
+                                if(s == "Clubs") return 0;
+                                if(s == "Diamonds") return 1;
+                                if(s == "Hearts") return 2;
+                                if(s == "Spades") return 3;
+                                return 4;
+                            };
+                            if(suitOrder(a.getBentuk()) != suitOrder(b.getBentuk()))
+                                return suitOrder(a.getBentuk()) < suitOrder(b.getBentuk());
+                            return a.getSkor() < b.getSkor();
+                        });
+                        cout << "Kartu diurutkan berdasarkan suit.\n";
+                    }
                 }
+
+                else if(action=="4"){
+                    exitToMenu = true;
+                    actionDone = true;
+                }
+
+                } // end inner action loop
+
+                if(exitToMenu)
+                    break;
 
                 cout<<"------------------------\n";
             }
